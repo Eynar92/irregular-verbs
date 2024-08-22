@@ -65,10 +65,12 @@ export function DataTable<TData, TValue>({
                     value={(table.getColumn(currentStatus)?.getFilterValue() as string) ?? ""}
                     onChange={(event) => {
                         if (currentStatus === 'simple_form') {
+                            table.getColumn('meaning')?.setFilterValue(undefined);
                             table.getColumn('simple_form')?.setFilterValue(event.target.value);
                             return;
                         }
                         if (currentStatus === 'meaning') {
+                            table.getColumn('simple_form')?.setFilterValue(undefined);
                             table.getColumn('meaning')?.setFilterValue(event.target.value);
                             return;
                         }
