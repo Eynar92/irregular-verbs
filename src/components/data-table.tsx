@@ -1,12 +1,14 @@
 "use client"
-
+import { useState } from "react"
 import {
     ColumnDef,
-    ColumnFiltersState,
     flexRender,
     getCoreRowModel,
-    getFilteredRowModel,
     useReactTable,
+    SortingState,
+    getSortedRowModel,
+    ColumnFiltersState,
+    getFilteredRowModel,
 } from "@tanstack/react-table"
 
 import {
@@ -17,8 +19,16 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { useState } from "react"
 import { Input } from "./ui/input"
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -30,28 +40,64 @@ export function DataTable<TData, TValue>({
     data,
 }: DataTableProps<TData, TValue>) {
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+    const [sorting, setSorting] = useState<SortingState>([]);
+    const [currentStatus, setCurrentStatus] = useState('simple_form');
 
     const table = useReactTable({
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
+        onSortingChange: setSorting,
+        getSortedRowModel: getSortedRowModel(),
         onColumnFiltersChange: setColumnFilters,
         getFilteredRowModel: getFilteredRowModel(),
         state: {
             columnFilters,
+            sorting,
         },
     })
 
     return (
         <div className="space-y-4">
-            <Input
-                placeholder="Filter verbs..."
-                value={(table.getColumn("meaning")?.getFilterValue() as string) ?? ""}
-                onChange={(event) =>
-                    table.getColumn("meaning")?.setFilterValue(event.target.value)
-                }
-                className="max-w-sm"
-            />
+            <div className="flex gap-2">
+                <Input
+                    placeholder={`Search by ${currentStatus === 'simple_form' ? 'Simple Form...' : 'Meaning...'}`}
+                    value={(table.getColumn(currentStatus)?.getFilterValue() as string) ?? ""}
+                    onChange={(event) => {
+                        if (currentStatus === 'simple_form') {
+                            table.getColumn('simple_form')?.setFilterValue(event.target.value);
+                            return;
+                        }
+                        if (currentStatus === 'meaning') {
+                            table.getColumn('meaning')?.setFilterValue(event.target.value);
+                            return;
+                        }
+                        // setCurrentStatus('all');
+                        // table.getColumn('meaning')?.setFilterValue(undefined);
+                        // table.getColumn('simple_form')?.setFilterValue(event.target.value);
+                    }}
+                    className="max-w-sm sm:max-w-3xl"
+                />
+
+                <Select
+                    value={currentStatus}
+                    onValueChange={(value) => {
+                        setCurrentStatus(value);
+                    }}
+                >
+                    <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Simple Form" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup>
+                            <SelectLabel>Search By</SelectLabel>
+                            {/* <SelectItem value="all">All</SelectItem> */}
+                            <SelectItem value="simple_form">Simple Form</SelectItem>
+                            <SelectItem value="meaning">Meaning</SelectItem>
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
+            </div>
             <div className="rounded-md border">
                 <Table>
                     <TableHeader>
