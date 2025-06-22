@@ -24,7 +24,7 @@ export const columns: ColumnDef<Verb>[] = [
                 variant="ghost"
                 onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
             >
-                Verb
+                Base Form
                 <SortedIcon isSorted={column.getIsSorted()} />
             </Button>
         ),
