@@ -61,44 +61,16 @@ export function DataTable<TData, TValue>({
         <div className="space-y-4">
             <div className="flex gap-2">
                 <Input
-                    placeholder={`Search by ${currentStatus === 'simple_form' ? 'Simple Form...' : 'Meaning...'}`}
+                    placeholder="Search by verb in simple form..."
                     value={(table.getColumn(currentStatus)?.getFilterValue() as string) ?? ""}
                     onChange={(event) => {
                         if (currentStatus === 'simple_form') {
-                            table.getColumn('meaning')?.setFilterValue(undefined);
                             table.getColumn('simple_form')?.setFilterValue(event.target.value);
                             return;
                         }
-                        if (currentStatus === 'meaning') {
-                            table.getColumn('simple_form')?.setFilterValue(undefined);
-                            table.getColumn('meaning')?.setFilterValue(event.target.value);
-                            return;
-                        }
-                        // setCurrentStatus('all');
-                        // table.getColumn('meaning')?.setFilterValue(undefined);
-                        // table.getColumn('simple_form')?.setFilterValue(event.target.value);
                     }}
                     className="max-w-sm sm:max-w-3xl"
                 />
-
-                <Select
-                    value={currentStatus}
-                    onValueChange={(value) => {
-                        setCurrentStatus(value);
-                    }}
-                >
-                    <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Simple Form" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectGroup>
-                            <SelectLabel>Search By</SelectLabel>
-                            {/* <SelectItem value="all">All</SelectItem> */}
-                            <SelectItem value="simple_form">Simple Form</SelectItem>
-                            <SelectItem value="meaning">Meaning</SelectItem>
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
             </div>
             <div className="rounded-md border">
                 <Table>

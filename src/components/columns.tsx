@@ -4,6 +4,7 @@ import { Verb } from "@/types/verb.interface";
 import { ColumnDef, SortDirection } from "@tanstack/react-table";
 import { Button } from "./ui/button";
 import { ChevronUp } from "lucide-react";
+import { Badge } from "./ui/badge";
 
 const SortedIcon = ({ isSorted }: { isSorted: false | SortDirection }) => {
     if (isSorted === 'asc') {
@@ -17,43 +18,39 @@ const SortedIcon = ({ isSorted }: { isSorted: false | SortDirection }) => {
 
 export const columns: ColumnDef<Verb>[] = [
     {
-        accessorKey: "id",
-        header: ({ column }) => (
-            <Button
-                variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-            >
-                Id
-                <SortedIcon isSorted={column.getIsSorted()} />
-            </Button>
-        ),
-    },
-    {
-        accessorKey: "type",
-        header: ({ column }) => (
-            <Button
-                variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-            >
-                Type
-                <SortedIcon isSorted={column.getIsSorted()} />
-            </Button>
-        ),
-        cell: ({ row }) => <span className="capitalize font-bold">{row.getValue("type") === 'regular' ? 'r' : 'i'}</span>,
-    },
-    {
         accessorKey: "simple_form",
         header: ({ column }) => (
             <Button
                 variant="ghost"
                 onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
             >
-                Simple Form
+                Verb
                 <SortedIcon isSorted={column.getIsSorted()} />
             </Button>
         ),
-        cell: ({ row }) => <span className="capitalize">{row.getValue("simple_form")}</span>,
+        cell: ({ row }) => (
+            <div className="flex flex-col gap-4">
+                <span className="capitalize font-semibold">{row.original.simple_form}</span>
+                <span className="text-sm capitalize text-muted-foreground">{row.original.meaning}</span>
+                <Badge variant="secondary" className={`w-fit ${row.original.type === 'regular' ? 'bg-green-200 text-green-800 hover:bg-green-200/80' : 'bg-cyan-200 text-cyan-800 hover:bg-cyan-200/80'}`}>
+                    {row.original.type === "regular" ? 'Regular' : 'Irregular'}
+                </Badge>
+            </div>
+        ),
     },
+    // {
+    //     accessorKey: "simple_form",
+    //     header: ({ column }) => (
+    //         <Button
+    //             variant="ghost"
+    //             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+    //         >
+    //             Simple Form
+    //             <SortedIcon isSorted={column.getIsSorted()} />
+    //         </Button>
+    //     ),
+    //     cell: ({ row }) => <span className="capitalize">{row.getValue("simple_form")}</span>,
+    // },
     {
         accessorKey: "third_person",
         header: ({ column }) => (
@@ -106,17 +103,18 @@ export const columns: ColumnDef<Verb>[] = [
         ),
         cell: ({ row }) => <span className="capitalize">{row.getValue("gerund")}</span>,
     },
-    {
-        accessorKey: "meaning",
-        header: ({ column }) => (
-            <Button
-                variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-            >
-                Meaning
-                <SortedIcon isSorted={column.getIsSorted()} />
-            </Button>
-        ),
-        cell: ({ row }) => <span className="capitalize">{row.getValue("meaning")}</span>,
-    },
+    // {
+    //     accessorKey: "meaning",
+    //     enableHiding: true,
+        // header: ({ column }) => (
+        //     <Button
+        //         variant="ghost"
+        //         onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        //     >
+        //         Meaning
+        //         <SortedIcon isSorted={column.getIsSorted()} />
+        //     </Button>
+        // ),
+        // cell: ({ row }) => <span className="capitalize">{row.getValue("meaning")}</span>,
+    // },
 ];
