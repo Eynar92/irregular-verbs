@@ -26,7 +26,6 @@ export const metadata: Metadata = {
     url: "https://irregular-regular-verbs.vercel.app",
     siteName: "BabeLift"
   },
-  
 };
 
 export default function RootLayout({
